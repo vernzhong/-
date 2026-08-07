@@ -92,3 +92,9 @@ export async function getStats() {
     inspirations: inspirations.length,
   };
 }
+
+// ============ 灵感操作 ============
+export async function deleteInspiration(id: string) {
+  const { error } = await supabase.from('inspirations').delete().eq('id', id);
+  if (error) throw error;
+}
