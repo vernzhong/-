@@ -1,77 +1,92 @@
+"use client";
+
 import { useState } from 'react';
 import { Search, X } from 'lucide-react';
 
+interface SearchResult {
+  title: string;
+  type: string;
+  link: string;
+}
+
+const mockResults: SearchResult[] = [
+  { title: '总览 - 产品工作台', type: '页面', link: '/' },
+  { title: '任务清单', type: '页面', link: '/tasks' },
+  { title: 'AI 热点', type: '页面', link: '/ai-hotspot' },
+  { title: '每日复盘', type: '页面', link: '/review' },
+  { title: '灵感库', type: '页面', link: '/inspiration' },
+  { title: '设置', type: '页面', link: '/settings' },
+  { title: '签到原型', type: '文档', link: '#' },
+  { title: '产品需求文档', type: '文档', link: '#' },
+];
+
 export default function GlobalSearch() {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
-  const [showResults, setShowResults] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const search = (query: string) => {
-    if (query.length < 2) {
-      setResults([]);
-      setShowResults(false);
-      return;
-    }
-    // 模拟搜索结果
-    const mockResults = [
-      { title: '总览数据', type: 'dashboard', link: '/dashboard' },
-      { title: '近期任务', type: 'tasks', link: '/tasks' },
-      { title: '本周复盘', type: 'review', link: '/review' },
-      { title: 'AI热点', type: 'ai', link: '/ai-hotspot' },
-      { title: '灵感库', type: 'inspiration', link: '/inspiration' },
-      { title: '日历', type: 'calendar', link: '/calendar' },
-    ];
-    setResults(
-      mockResults.filter(r =>
+  const results = query.trim() === ''
+    ? []
+    : mockResults.filter((r) =>
         r.title.toLowerCase().includes(query.toLowerCase())
-      )
-    );
-    setShowResults(true);
-  };
-
-  const closeResults = () => {
-    setQuery('');
-    setResults([]);
-    setShowResults(false);
-  };
+      );
 
   return (
-    <div className="relative hidden md:block">
-      <div className="relative">
-        <Search className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+    <div className="relative">
+      {/* 搜索框 */}
+      <div className="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent transition-all">
+        <Search className="h-4 w-4 text-gray-400 flex-shrink-0" />
         <input
           type="text"
           placeholder="全局搜索..."
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
-            search(e.target.value);
+            setIsOpen(true);
           }}
-          className="w-80 pl-10 pr-10 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+          onFocus={() => setIsOpen(true)}
+          className="flex-1 bg-transparent border-none outline-none text-sm text-gray-700 px-2 placeholder-gray-400"
         />
         {query && (
           <button
-            onClick={closeResults}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            onClick={() => {
+              setQuery('');
+              setIsOpen(false);
+            }}
+            className="text-gray-400 hover:text-gray-600"
           >
             <X className="h-4 w-4" />
           </button>
         )}
       </div>
 
-      {showResults && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg z-50 p-2 space-y-1">
-          {results.map((result, idx) => (
-            <div
-              key={idx}
-              onClick={() => { closeResults(); window.location.href = result.link; }}
-              className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer text-sm"
-            >
-              <span className="text-gray-400 mr-2">{idx + 1}.</span>
-              <span className="text-gray-900 flex-1">{result.title}</span>
-              <span className="text-xs text-gray-400">{result.type}</span>
+      {/* 搜索结果下拉 */}
+      {isOpen && query.trim() && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden z-50">
+          {results.length === 0 ? (
+            <div className="px-4 py-6 text-center text-sm text-gray-400">
+              未找到匹配结果
             </div>
-          ))}
+          ) : (
+            <ul className="py-1">
+              {results.map((item, index) => (
+                <li key={index}>
+                  <a
+                    href={item.link}
+                    className="flex items-center justify-between px-4 py-2 hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      setQuery('');
+                      setIsOpen(false);
+                    }}
+                  >
+                    <span className="text-sm text-gray-700">{item.title}</span>
+                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
+                      {item.type}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </div>
