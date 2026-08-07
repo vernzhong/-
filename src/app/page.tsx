@@ -1,9 +1,6 @@
 "use client";
 
-// 其余代码保持不变
-import { useState, useEffect } from 'react';
-import { useQuery } from 'sonner';
-import { Calendar, List, TrendingUp, CheckCircle2, Clock } from 'lucide-react';
+import { useState } from 'react';
 import Dashboard from './components/Dashboard';
 import Sidebar from './components/Sidebar';
 
@@ -16,8 +13,8 @@ export default function Home() {
       <main className="flex-1 flex flex-col">
         <header className="flex items-center justify-between px-6 py-3 border-b border-gray-200 bg-white shadow-sm">
           <div className="flex items-center space-x-4">
-            <h1 className="text-xl font-bold text-gray-900">人生工作台</h1>
-            <span className="text-xs text-gray-500">Life Workstation</span>
+            <h1 className="text-xl font-bold text-gray-900">产品工作台</h1>
+            <span className="text-xs text-gray-500">Product Workstation</span>
           </div>
           <div className="flex items-center space-x-4">
             <div className="relative hidden md:block">
@@ -39,56 +36,7 @@ export default function Home() {
         </header>
 
         <div className="flex-1 p-6">
-          {activeTab === 'overview' && <Dashboard />}
-          <div className="hidden md:flex">
-            <div className="grid grid-cols-3 gap-6 mb-6">
-              <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">待办事项</p>
-                    <p className="text-2xl font-bold text-gray-900">12</p>
-                  </div>
-                  <CheckCircle2 className="h-6 w-6 text-green-500" />
-                </div>
-                <div className="mt-3 h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                  <div className="h-full bg-green-500 rounded-full" style={{ width: '60%' }}></div>
-                </div>
-              </div>
-              <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">本周目标</p>
-                    <p className="text-2xl font-bold text-gray-900">5/8</p>
-                  </div>
-                  <TrendingUp className="h-6 w-6 text-blue-500" />
-                </div>
-                <div className="mt-3 h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                  <div className="h-full bg-blue-500 rounded-full" style={{ width: '62%' }}></div>
-                </div>
-              </div>
-              <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">灵感</p>
-                    <p className="text-2xl font-bold text-gray-900">8</p>
-                  </div>
-                  <Clock className="h-6 w-6 text-purple-500" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="md:hidden">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-                <p className="text-xs text-gray-500 font-medium">待办事项</p>
-                <p className="text-2xl font-bold text-gray-900">12</p>
-              </div>
-              <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-                <p className="text-xs text-gray-500 font-medium">本周目标</p>
-                <p className="text-2xl font-bold text-gray-900">5/8</p>
-              </div>
-            </div>
-          </div>
+          <Dashboard />
         </div>
       </main>
     </div>
