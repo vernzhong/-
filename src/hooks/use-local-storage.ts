@@ -1,22 +1,25 @@
-'use strict';
-import { useState, useEffect, create } from 'react';
+"use client";
 
-const STORAGE_KEY = 'life-workstation-data';
+import { useState, useEffect } from 'react';
 
-export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
-  const [stored, setStored] = useState<T>(() => {
+export function useLocalStorage<T>(key: string, initialValue: T) {
+  const [storedValue, setStoredValue] = useState<T>(() => {
     try {
-      const item = localStorage.getItem(key);
+      const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
-    } catch {
+    } catch (error) {
+      console.error('读取 localStorage 失败:', error);
       return initialValue;
     }
   });
 
-  const set = (value: T) => {
-    setStored(value);
-    localStorage.setItem(key, JSON.stringify(value));
-  };
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(storedValue));
+    } catch (error) {
+      console.error('写入 localStorage 失败:', error);
+    }
+  }, [key, storedValue]);
 
-  return [stored, set] as [T, (value: T) => void];
+  return [storedValue, setStoredValue] as const;
 }
